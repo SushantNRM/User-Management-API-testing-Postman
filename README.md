@@ -25,11 +25,11 @@ This project demonstrates API testing of a user management module, covering CRUD
 | 11  | Check response time             | -      | Less than 1000 ms       |
 
 
-## 🔗 Request Chaining
+->Request Chaining
 - Captured `user_id` from Create User response and reused it in Get/Update/Delete requests
 - Captured `token` from Login response and reused it in protected endpoint headers
 
-## 🚀 How to Run This Project
+->How to Run This Project
 1. Clone/download this repository
 2. Import `collection.json` and `environment.json` into Postman
 3. Select the imported environment
