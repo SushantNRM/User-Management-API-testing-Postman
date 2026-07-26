@@ -1,36 +1,53 @@
-# User-Management-API-testing-Postman
+# User Management API Testing (Postman)
+ Project Overview
 API testing project for a user management module using Postman, covering CRUD operations, authentication, and negative test scenarios. Automated with Newman.
 
-# User Management API Testing (Postman)
-
-## 📌 Project Overview
-This project demonstrates API testing of a user management module, covering CRUD operations, authentication (login/token), and both positive and negative test scenarios. Testing was performed using Postman, with automated execution via Newman CLI.
-
-## 🔧 Tools Used
+🔧 Tools Used
 - Postman
-  
+- Newman (CLI automation)
+- DummyJSON API (public test API)
+- Node.js / npm
 
-| No. | Test Scenario                   | Method | Expected Result         |
-| --- | ------------------------------- | ------ | ----------------------- |
-| 1   | Get all users                   | GET    | 200 OK                  |
-| 2   | Get user by valid ID            | GET    | 200 OK                  |
-| 3   | Get user by invalid ID          | GET    | 404 Not Found           |
-| 4   | Create a new user               | POST   | 201 Created             |
-| 5   | Update a user                   | PUT    | 200 OK                  |
-| 6   | Delete a user                   | DELETE | 200 OK                  |
-| 7   | Login with valid credentials    | POST   | 200 OK + Token          |
-| 8   | Login with invalid credentials  | POST   | 400/401 Error           |
-| 9   | Access protected API with token | GET    | 200 OK                  |
-| 10  | Validate response fields        | -      | Required fields present |
-| 11  | Check response time             | -      | Less than 1000 ms       |
+ ✅ Test Scenarios Covered
+
+| # | Request | Method | Scenario | Expected Result |
+|---|---------|--------|----------|------------------|
+| 1 | Get All Users | GET | Fetch list of all users | 200 OK, response contains users array |
+| 2 | Get Single User | GET | Fetch user by valid ID | 200 OK, correct user ID returned |
+| 3 | Create User | POST | Create a new user | 201 Created, new user has an id |
+| 4 | Update User | PUT | Update existing user's firstName | 200 OK, firstName reflects update |
+| 5 | Delete User | DELETE | Delete existing user | 200 OK, isDeleted is true |
+| 6 | Login | POST | Login with valid credentials | 200 OK, accessToken returned |
+| 7 | Get Logged In User | GET | Access protected endpoint using token | 200 OK, correct username returned |
+| 8 | Login (Negative) | POST | Login with wrong password | 400 Bad Request, "Invalid credentials" |
+| 9 | Get User (Negative) | GET | Fetch user with invalid ID | 404 Not Found, "not found" message |
+
+Total: 9 requests, 25 automated assertions, 0 failures**
+
+ Authentication & Request Chaining
+- Captured `accessToken` from Login response using a post-response script
+- Stored token in an environment variable (`auth_token`)
+- Reused token in Authorization header (Bearer Token) to access a protected endpoint, simulating a real logged-in session
+- Encountered and resolved a token-expiry issue during testing, confirming proper token lifecycle handling
+
+How to Run This Project
+
+Option 1: Run in Postman
+1. Import `User Management API Testing.postman_collection.json` and `Environment_new.postman_environment.json` into Postman
+2. Select the imported environment
+3. Run requests individually or use "Run Collection"
+
+Option 2: Run via Newman (CLI Automation)
+```bash
+npm install -g newman
+npm install -g newman-reporter-html
+newman run "User Management API Testing.postman_collection.json" -e "Environment_new.postman_environment.json" -r cli,html --reporter-html-export report.html
+```
+
+ 📊 Test Report
+See `report.html` for the full automated test execution report (download and open in browser).
 
 
-->Request Chaining
-- Captured `user_id` from Create User response and reused it in Get/Update/Delete requests
-- Captured `token` from Login response and reused it in protected endpoint headers
-
-->How to Run This Project
-1. Clone/download this repository
-2. Import `collection.json` and `environment.json` into Postman
-3. Select the imported environment
-4. Run manually in Postman, OR run via Newman:
+- Writing automated assertions with `pm.test()`
+- API test automation using Newman CLI
+- Troubleshooting real issues (token expiry) during testing
